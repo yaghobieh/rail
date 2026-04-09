@@ -1,0 +1,65 @@
+---
+description: ForgeStack publishing, npm, and CI/CD conventions
+alwaysApply: true
+---
+
+# ForgeStack Publishing & CI/CD Standards
+
+## npm Packages
+
+All ForgeStack packages are scoped under `@forgedevstack/`:
+
+| Package | Repo | Description |
+|---------|------|-------------|
+| `@forgedevstack/bear` | bear | React UI component library |
+| `@forgedevstack/kiln` | kiln | Component documentation & showcase (Storybook alternative) |
+| `@forgedevstack/forge-compass` | compass | Client-side routing |
+| `@forgedevstack/synapse` | synapse | State management |
+| `@forgedevstack/forge-form` | forge-form | Form state & validation |
+| `@forgedevstack/forge-query` | forge-query | Data fetching |
+| `@forgedevstack/grid-table` | grid-table | Data grid/table |
+| `@forgedevstack/anvil` | Anvil | Utilities |
+| `@forgedevstack/harbor` | Harbor | Backend framework |
+| `@forgedevstack/lintforge` | lintforge | Lint rules |
+| `@forgedevstack/forge-cli` | forge-cli | CLI scaffolding |
+
+## GitHub Actions — Publishing Workflow
+
+Every publishable package uses the same CI pattern (`.github/workflows/publish.yml`):
+
+1. **Trigger:** Push to `main` or `workflow_dispatch`.
+2. **Steps:**
+   - Checkout with `fetch-depth: 0`
+   - Setup Node 20 with `registry-url: https://registry.npmjs.org`
+   - `npm ci` → `npm run build`
+   - Auto-bump patch version (`npm version patch --no-git-tag-version`)
+   - Commit + tag + push (`release: v{VERSION}`)
+   - `npm publish --access public --provenance`
+3. **Secrets required:** `NPM_TOKEN` (npm automation token in GitHub repo settings).
+4. **Permissions:** `contents: write`, `id-token: write` (for provenance).
+
+## Version Policy
+
+- **Patch** bumps are automated on every push to main.
+- **Minor/Major** bumps are done manually before push: `npm version minor` or `npm version major`.
+- Version tags follow `v{MAJOR}.{MINOR}.{PATCH}` format.
+
+## Publishing Manually (First Time or Emergency)
+
+```bash
+npm login          # Opens browser for OIDC auth
+npm publish --access public
+```
+
+## Package Structure
+
+- `"files": ["dist"]` — only ship the built output.
+- `"exports"` — always put `"types"` first, then `"import"`, then `"require"`.
+- `"prepublishOnly": "npm run build"` — safety net for manual publishes.
+
+## Portal Builds
+
+- Bear portal lives at `bear/portal/` and deploys to Vercel.
+- `portal:build` runs `cd portal && npm run build` which also pre-builds Bear.
+- Kiln stories are embedded in the portal at `/kiln/*` routes for production.
+- In dev, `npm run kiln` starts the standalone Kiln server on port 6006.

@@ -1,0 +1,48 @@
+---
+description: Index of ForgeStack agents — when to use PO, Developer, or Doc writer
+alwaysApply: true
+---
+
+# ForgeStack Agents Index
+
+Use these agents to keep work consistent across libs. **You do not need to “be” one agent only** — switch by task. When the user says “as PO”, “as dev for Bear”, or “write a dev.to post”, follow the corresponding rule.
+
+## 1. Product Owner (PO)
+
+- **Rule:** `agent-product-owner.mdc`
+- **When:** Roadmap, priorities, release scope, user stories, acceptance criteria, “why we build this,” cross-library product decisions.
+- **Libraries:** All (Bear, Harbor, Compass, Form, Query, Grid Table, Anvil, Synapse, CLI, Studio, BCMS, LintForge, portal).
+
+## 2. Developer Agents (3)
+
+- **Developer UI** — `agent-developer-ui.mdc`  
+  Bear, Grid Table, Forge Form, Anvil; React components, types, BEM, theme. Follow Bear UI standards in Bear repo.
+
+- **Developer Backend** — `agent-developer-backend.mdc`  
+  Harbor, BCMS; routes, controllers, services, DB, auth, validation.
+
+- **Developer Tooling** — `agent-developer-tooling.mdc`  
+  Forge CLI, Forge Studio, Compass, LintForge; scaffolding, AI pipeline, routing, lint rules.
+
+## 3. Doc Writer
+
+- **Rule:** `agent-doc-writer.mdc`
+- **When:** Articles for dev.to, Medium; threads or posts for X (Twitter); Reddit-friendly versions. Always include repo link; focus on technical/frontend context where relevant.
+- **References:** docs/articles/, reddit-posting-guide.md, bear-1-0-9-whats-new.md.
+
+## 4. Publishing & CI/CD
+
+- **Rule:** `forge-publishing.mdc` (always applied)
+- **Covers:** npm package scope (`@forgedevstack/*`), GitHub Actions publish workflow, version policy, portal builds, Kiln integration.
+- All publishable packages follow the same CI pattern documented there.
+
+## How to Invoke
+
+- **Always applied:** This index (agents-index.mdc) is always applied so the model knows the roles.
+- **On demand:** Reference the agent by name or rule file, e.g. “act as Product Owner and define acceptance criteria for…” or “using the Doc writer rule, draft a dev.to post for Bear 1.0.9.”
+
+## Handoffs
+
+- PO defines **what** and **why**; Developers implement **how**.
+- Doc writer uses **what** and **how** (and repo links) to write; does not set roadmap or scope.
+- When a task spans libs (e.g. Studio + Bear), PO can scope it; the relevant Developer agents handle their repos.
