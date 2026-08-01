@@ -33,6 +33,7 @@ export {
   Zoom,
   Controller,
   A11y,
+  Lazy,
   History,
   HashNavigation,
   Thumbs,
@@ -51,6 +52,10 @@ export {
 
 // Constants
 export { DEFAULTS, CSS_CLASSES, TRANSITION_DEFAULTS, STORY_DEFAULTS } from './constants';
+
+// Utils
+export { createBreakpoints, slidesPerViewAt } from './utils';
+export type { SlidesPerViewMap, CreateBreakpointsOptions } from './utils';
 
 // Types
 export type {
@@ -83,6 +88,7 @@ export type {
   ZoomOptions,
   ControllerOptions,
   A11yOptions,
+  LazyOptions,
   HistoryOptions,
   HashNavigationOptions,
   ThumbsOptions,

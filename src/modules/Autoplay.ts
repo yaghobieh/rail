@@ -8,34 +8,43 @@ const DEFAULTS: AutoplayOptions = {
   reverseDirection: false,
   waitForTransition: true,
   pauseOnMouseEnter: false,
+  pauseOnReducedMotion: true,
 };
+
+const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
+const DEFAULT_DELAY_MS = 3000;
 
 function resolve(opts: AutoplayOptions | boolean | undefined): AutoplayOptions {
   if (typeof opts === 'boolean') return { ...DEFAULTS, enabled: opts };
   return { ...DEFAULTS, ...opts };
 }
 
-/**
- * Autoplay module — advances slides automatically on a configurable timer.
- * Supports pause on hover, pause on interaction, reverse direction,
- * and stop-on-last-slide behavior.
- *
- * @param instance - The Rail instance to add autoplay to
- * @returns RailModule with start/stop/pause/resume controls
- *
- * @example
- * ```tsx
- * <Rail modules={[Autoplay]} autoplay={{ delay: 3000, pauseOnMouseEnter: true }} />
- * ```
- */
+function prefersReducedMotion(): boolean {
+  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false;
+  return window.matchMedia(REDUCED_MOTION_QUERY).matches;
+}
+
 export const Autoplay: RailModuleFactory = (instance: RailInstance): RailModule => {
   const config = resolve(instance.options.autoplay);
   let timer: ReturnType<typeof setTimeout> | null = null;
   let running = false;
   let paused = false;
+  let mediaQuery: MediaQueryList | null = null;
+
+  function clearTimer() {
+    if (timer) {
+      clearTimeout(timer);
+      timer = null;
+    }
+  }
+
+  function shouldBlockForMotion(): boolean {
+    return config.pauseOnReducedMotion !== false && prefersReducedMotion();
+  }
 
   function start() {
     if (running || !config.enabled) return;
+    if (shouldBlockForMotion()) return;
     running = true;
     instance.state.autoplayRunning = true;
     instance.emit('autoplayStart');
@@ -46,7 +55,7 @@ export const Autoplay: RailModuleFactory = (instance: RailInstance): RailModule 
     if (!running) return;
     running = false;
     instance.state.autoplayRunning = false;
-    if (timer) { clearTimeout(timer); timer = null; }
+    clearTimer();
     instance.emit('autoplayStop');
   }
 
@@ -54,12 +63,13 @@ export const Autoplay: RailModuleFactory = (instance: RailInstance): RailModule 
     if (paused || !running) return;
     paused = true;
     instance.state.autoplayPaused = true;
-    if (timer) { clearTimeout(timer); timer = null; }
+    clearTimer();
     instance.emit('autoplayPause');
   }
 
   function resume() {
     if (!paused || !running) return;
+    if (shouldBlockForMotion()) return;
     paused = false;
     instance.state.autoplayPaused = false;
     instance.emit('autoplayResume');
@@ -68,9 +78,9 @@ export const Autoplay: RailModuleFactory = (instance: RailInstance): RailModule 
 
   function scheduleNext() {
     if (!running || paused) return;
-    if (timer) clearTimeout(timer);
+    clearTimer();
     timer = setTimeout(() => {
-      if (!running || paused) return;
+      if (!running || paused || shouldBlockForMotion()) return;
       if (config.stopOnLastSlide && instance.state.isEnd && !instance.options.loop) {
         stop();
         return;
@@ -78,11 +88,16 @@ export const Autoplay: RailModuleFactory = (instance: RailInstance): RailModule 
       if (config.reverseDirection) instance.slidePrev();
       else instance.slideNext();
       scheduleNext();
-    }, config.delay ?? 3000);
+    }, config.delay ?? DEFAULT_DELAY_MS);
   }
 
-  function onMouseEnter() { if (config.pauseOnMouseEnter) pause(); }
-  function onMouseLeave() { if (config.pauseOnMouseEnter) resume(); }
+  function onMouseEnter() {
+    if (config.pauseOnMouseEnter) pause();
+  }
+
+  function onMouseLeave() {
+    if (config.pauseOnMouseEnter) resume();
+  }
 
   function onTouchStart() {
     if (config.disableOnInteraction) stop();
@@ -91,6 +106,17 @@ export const Autoplay: RailModuleFactory = (instance: RailInstance): RailModule 
 
   function onTouchEnd() {
     if (!config.disableOnInteraction && paused) resume();
+  }
+
+  function onMotionChange(event: MediaQueryListEvent) {
+    if (config.pauseOnReducedMotion === false) return;
+    if (event.matches) {
+      if (running) pause();
+    } else if (running && paused) {
+      resume();
+    } else if (config.enabled && !running) {
+      start();
+    }
   }
 
   instance.autoplayStart = start;
@@ -107,7 +133,13 @@ export const Autoplay: RailModuleFactory = (instance: RailInstance): RailModule 
       container?.addEventListener('mouseleave', onMouseLeave);
       instance.on('touchStart', onTouchStart);
       instance.on('touchEnd', onTouchEnd);
-      start();
+
+      if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
+        mediaQuery = window.matchMedia(REDUCED_MOTION_QUERY);
+        mediaQuery.addEventListener('change', onMotionChange);
+      }
+
+      if (!shouldBlockForMotion()) start();
     },
     destroy() {
       stop();
@@ -116,6 +148,8 @@ export const Autoplay: RailModuleFactory = (instance: RailInstance): RailModule 
       container?.removeEventListener('mouseleave', onMouseLeave);
       instance.off('touchStart', onTouchStart);
       instance.off('touchEnd', onTouchEnd);
+      mediaQuery?.removeEventListener('change', onMotionChange);
+      mediaQuery = null;
     },
     onTransitionEnd() {
       if (config.waitForTransition && running && !paused) scheduleNext();
