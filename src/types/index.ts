@@ -28,6 +28,7 @@ export type {
   ZoomOptions,
   ControllerOptions,
   A11yOptions,
+  LazyOptions,
   HistoryOptions,
   HashNavigationOptions,
   ThumbsOptions,

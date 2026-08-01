@@ -140,6 +140,7 @@ export interface RailOptions {
   keyboard?: KeyboardOptions | boolean;
   mousewheel?: MousewheelOptions | boolean;
   virtual?: VirtualOptions | boolean;
+  lazy?: LazyOptions | boolean;
   parallax?: ParallaxOptions | boolean;
   grid?: GridOptions;
   zoom?: ZoomOptions | boolean;
@@ -288,6 +289,7 @@ export interface AutoplayOptions {
   reverseDirection?: boolean;
   waitForTransition?: boolean;
   pauseOnMouseEnter?: boolean;
+  pauseOnReducedMotion?: boolean;
 }
 
 export interface KeyboardOptions {
@@ -372,6 +374,19 @@ export interface A11yOptions {
   containerMessage?: string;
   itemRoleDescriptionMessage?: string;
   id?: string;
+  focusOnChange?: boolean;
+  rovingTabindex?: boolean;
+}
+
+export interface LazyOptions {
+  enabled?: boolean;
+  checkInView?: boolean;
+  loadPrevNext?: boolean;
+  loadOnTransitionStart?: boolean;
+  elementClass?: string;
+  loadingClass?: string;
+  loadedClass?: string;
+  preloaderClass?: string;
 }
 
 export interface HistoryOptions {

@@ -5,6 +5,27 @@ All notable changes to Rail will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-08-01
+
+### Added
+
+- **A11y** — Roving tabindex, focus-on-change after keyboard navigation, in-carousel arrow keys, `aria-current` on bullets, `aria-disabled` on nav edges, `focusOnChange` / `rovingTabindex` options.
+- **Autoplay** — `pauseOnReducedMotion` (default `true`) honors `prefers-reduced-motion: reduce` and reacts to media-query changes.
+- **Lazy module** — Deferred slide media loading via `data-src` / `data-srcset` / `data-poster`; works with `RailSlide lazy`.
+- **Breakpoint helpers** — `createBreakpoints()` and `slidesPerViewAt()` for slidesPerView maps.
+- **Pagination polish** — Progressbar tracks continuous engine `progress`; vertical progressbar (`scaleY` + side placement); fraction stays group-aware.
+
+### Changed
+
+- **FreeMode** — Momentum uses `requestAnimationFrame` velocity decay with bounce/sticky support; cancels on new touch.
+- **Vertical** — Stronger vertical layout/min-height rules and vertical progressbar styles.
+- **Build** — Copies `src/styles/rail.css` → `dist/styles.css` so `@forgedevstack/rail/styles.css` resolves after publish.
+
+### Fixed
+
+- Package `styles.css` export pointed at a missing dist file (#7).
+- `RailSlide` `lazy` prop was accepted but unused (#3).
+
 ## [1.0.0] - 2026-03-24
 
 ### Added

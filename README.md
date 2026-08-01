@@ -99,6 +99,7 @@ import {
   Zoom,
   Controller,
   A11y,
+  Lazy,
   History,
   HashNavigation,
   Thumbs,
@@ -109,8 +110,19 @@ import {
   EffectCards,
   EffectCreative,
   StoryMode,
+  createBreakpoints,
 } from '@forgedevstack/rail';
 ```
+
+## What's new in 1.0.1
+
+- **A11y** — Roving tabindex, focus-on-change, arrow-key focus within the carousel, `aria-roledescription`
+- **Autoplay** — Pauses when `prefers-reduced-motion: reduce` (opt-out via `pauseOnReducedMotion: false`)
+- **Lazy** — New module + `RailSlide lazy` for deferred image loading via `data-src`
+- **Pagination** — Continuous progressbar bound to engine progress; vertical progressbar support
+- **FreeMode** — Real momentum decay via `requestAnimationFrame`
+- **Breakpoints helpers** — `createBreakpoints` / `slidesPerViewAt`
+- **styles.css** — Build now ships `dist/styles.css` for `@forgedevstack/rail/styles.css`
 
 ## Effects
 
@@ -130,8 +142,43 @@ Available effects: `slide` (default), `fade`, `cube`, `flip`, `coverflow`, `card
 
 ```tsx
 <Rail
-  autoplay={{ delay: 3000, pauseOnMouseEnter: true }}
+  autoplay={{ delay: 3000, pauseOnMouseEnter: true, pauseOnReducedMotion: true }}
   modules={[Autoplay]}
+>
+  ...
+</Rail>
+```
+
+Autoplay respects `prefers-reduced-motion` by default and will not start (or will pause) when the user requests reduced motion.
+
+## Lazy Loading
+
+```tsx
+import { Rail, RailSlide, Lazy } from '@forgedevstack/rail';
+
+<Rail modules={[Lazy]} lazy>
+  <RailSlide lazy>
+    <img data-src="/photo-1.jpg" alt="One" className="rail-lazy" />
+  </RailSlide>
+  <RailSlide lazy>
+    <img data-src="/photo-2.jpg" alt="Two" className="rail-lazy" />
+  </RailSlide>
+</Rail>
+```
+
+## Progress / Fraction
+
+```tsx
+<Rail
+  modules={[Pagination]}
+  pagination={{ type: 'progressbar' }}
+>
+  ...
+</Rail>
+
+<Rail
+  modules={[Pagination]}
+  pagination={{ type: 'fraction' }}
 >
   ...
 </Rail>
@@ -150,6 +197,21 @@ Available effects: `slide` (default), `fade`, `cube`, `flip`, `coverflow`, `card
 ```
 
 ## Responsive
+
+```tsx
+import { createBreakpoints } from '@forgedevstack/rail';
+
+const breakpoints = createBreakpoints(
+  { 0: 1, 640: 2, 1024: 3 },
+  { spaceBetween: { 0: 8, 640: 16, 1024: 24 } },
+);
+
+<Rail slidesPerView={1} breakpoints={breakpoints}>
+  ...
+</Rail>
+```
+
+Or pass a raw map:
 
 ```tsx
 <Rail
@@ -277,12 +339,14 @@ import {
   // 25 Modules
   Navigation, Pagination, Scrollbar, Autoplay, Keyboard,
   Mousewheel, Virtual, Parallax, FreeMode, Grid,
-  Manipulation, Zoom, Controller, A11y, History,
+  Manipulation, Zoom, Controller, A11y, Lazy, History,
   HashNavigation, Thumbs,
   EffectFade, EffectCube, EffectFlip, EffectCoverflow,
   EffectCards, EffectCreative, StoryMode,
   // Manipulation utils
   appendSlide, prependSlide, addSlide, removeSlide, removeAllSlides,
+  // Breakpoint helpers
+  createBreakpoints, slidesPerViewAt,
   // Constants
   DEFAULTS, CSS_CLASSES,
 } from '@forgedevstack/rail';

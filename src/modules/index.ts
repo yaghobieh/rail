@@ -12,6 +12,7 @@ export { Manipulation, appendSlide, prependSlide, addSlide, removeSlide, removeA
 export { Zoom } from './Zoom';
 export { Controller } from './Controller';
 export { A11y } from './A11y';
+export { Lazy } from './Lazy';
 export { History } from './History';
 export { HashNavigation } from './HashNavigation';
 export { Thumbs } from './Thumbs';
