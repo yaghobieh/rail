@@ -70,6 +70,14 @@ export const CSS_CLASSES = {
   storyProgressBar: 'rail-story-progress-bar',
   storyProgressBarFill: 'rail-story-progress-bar-fill',
   storyProgressBarActive: 'rail-story-progress-bar-active',
+  marquee: 'rail-marquee',
+  marqueeReverse: 'rail-marquee-reverse',
+  marqueeNoPause: 'rail-marquee-no-pause',
+  marqueeMotion: 'rail-marquee-motion',
+  marqueeFade: 'rail-marquee-fade',
+  marqueeOffscreen: 'rail-marquee-offscreen',
+  autoHeight: 'rail-autoheight',
+  counter: 'rail-counter',
 } as const;
 
 export const TRANSITION_DEFAULTS = {

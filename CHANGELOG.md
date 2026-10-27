@@ -5,6 +5,14 @@ All notable changes to Rail will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2026-10-27
+
+### Added
+
+- **Marquee module** — continuous horizontal strip. Clones the slides so the loop is seamless, pauses on hover and focus, pauses while off screen, and stops when `prefers-reduced-motion: reduce` is set. `marquee={{ fade: true }}` fades the left and right edges. Opt in with `modules={[Marquee]}`.
+- **Counter module** — live “1 / 8” indicator. Updates on slide change. Opt in with `modules={[Counter]}`. `counter={{ separator: ' of ' }}` changes the divider.
+- **AutoHeight module** — the track height follows the active slide. Opt in with `modules={[AutoHeight]}`.
+
 ## [1.0.1] - 2026-08-01
 
 ### Added

@@ -100,6 +100,9 @@ import {
   Controller,
   A11y,
   Lazy,
+  Marquee,
+  Counter,
+  AutoHeight,
   History,
   HashNavigation,
   Thumbs,
@@ -113,6 +116,12 @@ import {
   createBreakpoints,
 } from '@forgedevstack/rail';
 ```
+
+## What's new in 1.0.2
+
+- **Marquee** — continuous strip. Pauses on hover, focus, and when off screen. `fade: true` fades the edges. Stops when reduced motion is on
+- **Counter** — `Counter` renders a live `1 / 8` indicator
+- **AutoHeight** — `AutoHeight` sizes the track to the active slide
 
 ## What's new in 1.0.1
 
