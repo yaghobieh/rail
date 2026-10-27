@@ -18,6 +18,8 @@ export type {
   PaginationBulletRender,
   ScrollbarOptions,
   AutoplayOptions,
+  MarqueeOptions,
+  CounterOptions,
   KeyboardOptions,
   MousewheelOptions,
   VirtualOptions,

@@ -156,6 +156,8 @@ export interface RailOptions {
   cardsEffect?: CardsEffectOptions;
   creativeEffect?: CreativeEffectOptions;
   storyMode?: StoryModeOptions | boolean;
+  marquee?: MarqueeOptions | boolean;
+  counter?: CounterOptions | boolean;
 
   modules?: RailModuleFactory[];
   on?: Partial<{ [K in keyof RailEvents]: RailEvents[K] }>;
@@ -290,6 +292,24 @@ export interface AutoplayOptions {
   waitForTransition?: boolean;
   pauseOnMouseEnter?: boolean;
   pauseOnReducedMotion?: boolean;
+}
+
+export interface MarqueeOptions {
+  enabled?: boolean;
+  duration?: number;
+  reverse?: boolean;
+  pauseOnHover?: boolean;
+  pauseOnReducedMotion?: boolean;
+  /** Fade the left and right edges of the strip. */
+  fade?: boolean;
+  /** Pause the strip while the carousel is outside the viewport. */
+  pauseOffscreen?: boolean;
+}
+
+export interface CounterOptions {
+  enabled?: boolean;
+  el?: string | HTMLElement | null;
+  separator?: string;
 }
 
 export interface KeyboardOptions {
